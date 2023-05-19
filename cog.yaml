@@ -1,0 +1,21 @@
+# Configuration for Cog ⚙️
+# Reference: https://github.com/replicate/cog/blob/main/docs/yaml.md
+
+build:
+  gpu: false
+  python_version: "3.10"
+  python_packages:
+    - "torch==1.13.0"
+    - "torchvision==0.14.0"
+    - "accelerate==0.19.0"
+    - "bitsandbytes==0.38.1"
+    - "safetensors==0.3.1"
+    - "sentencepiece==0.1.97"
+    
+  run:
+    - pip install git+https://github.com/huggingface/transformers@a7920065f2cfd2549b838f9a30afd7c265fcdd88
+    # - pip install ninja
+    # - pip install --pre triton
+    # - FORCE_CUDA=1 TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6" pip install -v -U git+https://github.com/facebookresearch/xformers.git@71205ec0993239779f8669b3d16d9df56d099d49#egg=xformers
+
+predict: "predict.py:Predictor"

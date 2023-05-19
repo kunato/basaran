@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+predict.py
+.cog
 
 # C extensions
 *.so
