@@ -302,6 +302,7 @@ def load_model(
     revision=None,
     cache_dir=None,
     load_in_8bit=False,
+    device_map_auto=False,
     local_files_only=False,
     trust_remote_code=False,
     half_precision=False,
@@ -320,7 +321,8 @@ def load_model(
     # Set device mapping and quantization options if CUDA is available.
     if torch.cuda.is_available():
         kwargs = kwargs.copy()
-        kwargs["device_map"] = "auto"
+        if device_map_auto:
+            kwargs["device_map"] = "auto"
         kwargs["load_in_8bit"] = load_in_8bit
 
         # Cast all parameters to float16 if quantization is enabled.
@@ -332,6 +334,9 @@ def load_model(
         model = AutoModelForCausalLM.from_pretrained(name_or_path, **kwargs)
     except ValueError:
         model = AutoModelForSeq2SeqLM.from_pretrained(name_or_path, **kwargs)
+    
+    if torch.cuda.is_available() and not device_map_auto:
+        model.to('cuda')
 
     # Check if the model has text generation capabilities.
     if not model.can_generate():

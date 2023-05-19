@@ -35,6 +35,7 @@ from . import COMPLETION_MAX_TOKENS
 from . import COMPLETION_MAX_N
 from . import COMPLETION_MAX_LOGPROBS
 from . import COMPLETION_MAX_INTERVAL
+from . import DEVICE_MAP_AUTO
 
 # Load the language model to be served.
 stream_model = load_model(
@@ -42,6 +43,7 @@ stream_model = load_model(
     revision=MODEL_REVISION,
     cache_dir=MODEL_CACHE_DIR,
     load_in_8bit=MODEL_LOAD_IN_8BIT,
+    device_map_auto=DEVICE_MAP_AUTO,
     local_files_only=MODEL_LOCAL_FILES_ONLY,
     trust_remote_code=MODEL_TRUST_REMOTE_CODE,
     half_precision=MODEL_HALF_PRECISION,

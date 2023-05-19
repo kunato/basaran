@@ -10,5 +10,6 @@ jinja2>=3.1.2
 pytest>=6.2.5
 safetensors~=0.3.1
 torch>=1.12.1
-transformers[sentencepiece]~=4.29.2
+sentencepiece~=0.1.97
+transformers @ git+https://github.com/huggingface/transformers@a7920065f2cfd2549b838f9a30afd7c265fcdd88
 waitress~=2.1.2

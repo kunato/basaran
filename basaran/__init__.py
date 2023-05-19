@@ -48,3 +48,6 @@ CUDA_MEMORY_FRACTION = float(os.getenv("CUDA_MEMORY_FRACTION", "1.0"))
 # Set memory fraction for the process if specified.
 if torch.cuda.is_available() and CUDA_MEMORY_FRACTION < 1:
     torch.cuda.set_per_process_memory_fraction(CUDA_MEMORY_FRACTION)
+
+# Extra arg
+DEVICE_MAP_AUTO = is_true(os.getenv("DEVICE_MAP_AUTO", ""))
