@@ -6,6 +6,7 @@ WORKDIR /app
 # Install app dependencies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+RUN pip install dumb-init
 
 # Bundle app source
 COPY . .
