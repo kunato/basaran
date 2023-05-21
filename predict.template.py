@@ -33,5 +33,4 @@ class Predictor(BasePredictor):
         for choice in self.model(
             prompt=prompt, max_tokens=max_length, temperature=temperature, top_p=top_p
         ):
-            print("streaming", choice)
-            yield choice
+            yield choice['text']
