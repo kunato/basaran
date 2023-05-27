@@ -1,3 +1,4 @@
+import torch
 from cog import BasePredictor, ConcatenateIterator, Input, Path
 from basaran.model import load_model
 
@@ -10,7 +11,7 @@ class Predictor(BasePredictor):
             kwargs = {
                 'device_map_auto': True,
                 'trust_remote_code': True,
-                'half_precision': True
+                'dtype': torch.bfloat16
             }
         else:
             kwargs = {}
