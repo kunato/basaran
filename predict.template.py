@@ -6,7 +6,15 @@ MODEL = "$MODEL"
 
 class Predictor(BasePredictor):
     def setup(self):
-        self.model = load_model(MODEL)
+        if 'falcon-40b' in MODEL:
+            kwargs = {
+                'device_map_auto': True,
+                'trust_remote_code': True,
+                'half_precision': True
+            }
+        else:
+            kwargs = {}
+        self.model = load_model(MODEL, **kwargs)
 
     def predict(
         self,
