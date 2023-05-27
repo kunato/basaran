@@ -305,7 +305,7 @@ def load_model(
     device_map_auto=False,
     local_files_only=False,
     trust_remote_code=False,
-    half_precision=False,
+    dtype=torch.float16,
 ):
     """Load a text generation model and make it stream-able."""
     kwargs = {
@@ -325,9 +325,10 @@ def load_model(
             kwargs["device_map"] = "auto"
         kwargs["load_in_8bit"] = load_in_8bit
 
-        # Cast all parameters to float16 if quantization is enabled.
-        if half_precision or load_in_8bit:
+        if load_in_8bit:
             kwargs["torch_dtype"] = torch.float16
+        else:
+            kwargs["torch_dtype"] = dtype
 
     # Support both decoder-only and encoder-decoder models.
     try:

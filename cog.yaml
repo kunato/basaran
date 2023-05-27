@@ -8,6 +8,7 @@ build:
   python_packages:
     - "torch==2.0.1"
     - "torchvision"
+    - "einops"
     - "accelerate==0.19.0"
     - "bitsandbytes==0.38.1"
     - "safetensors==0.3.1"
