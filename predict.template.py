@@ -13,6 +13,8 @@ class Predictor(BasePredictor):
                 'trust_remote_code': True,
                 'dtype': torch.bfloat16
             }
+            if 'GPTQ' in MODEL:
+                kwargs.update({'gptq': True})
         else:
             kwargs = {}
         self.model = load_model(MODEL, **kwargs)

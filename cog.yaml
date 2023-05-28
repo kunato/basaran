@@ -16,6 +16,7 @@ build:
 
   run:
     - pip install git+https://github.com/huggingface/transformers@17a55534f5e5df10ac4804d4270bf6b8cc24998d
+    - FORCE_CUDA=1 TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6" pip install git+https://github.com/PanQiWei/AutoGPTQ@4b8524ffb1b3f56edd9b1106ff809c07069ce693
     # - pip install ninja
     # - pip install --pre triton
     # - FORCE_CUDA=1 TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6" pip install -v -U git+https://github.com/facebookresearch/xformers.git@71205ec0993239779f8669b3d16d9df56d099d49#egg=xformers

@@ -306,6 +306,7 @@ def load_model(
     local_files_only=False,
     trust_remote_code=False,
     dtype=torch.float16,
+    gptq=False,
 ):
     """Load a text generation model and make it stream-able."""
     kwargs = {
@@ -318,6 +319,11 @@ def load_model(
         kwargs["cache_dir"] = cache_dir
     tokenizer = AutoTokenizer.from_pretrained(name_or_path, **kwargs)
 
+    if gptq:
+        from auto_gptq import AutoGPTQForCausalLM
+        assert torch.cuda.is_available()
+        model = AutoGPTQForCausalLM.from_quantized(name_or_path, device="cuda", use_triton=False, use_safetensors=True, torch_dtype=torch.float32, **kwargs)
+        return StreamModel(model, tokenizer)
     # Set device mapping and quantization options if CUDA is available.
     if torch.cuda.is_available():
         kwargs = kwargs.copy()
