@@ -1,6 +1,7 @@
 import torch
 from cog import BasePredictor, ConcatenateIterator, Input, Path
 from basaran.model import load_model
+from utils.downloadv2 import download
 
 MODEL = "$MODEL"
 
@@ -15,9 +16,14 @@ class Predictor(BasePredictor):
             }
             if 'GPTQ' in MODEL:
                 kwargs.update({'gptq': True})
+                local_path_or_model = download(MODEL, 'models')
+            else:
+                local_path_or_model = MODEL
         else:
             kwargs = {}
-        self.model = load_model(MODEL, **kwargs)
+            local_path_or_model = MODEL
+        print('load model: -> ', local_path_or_model)
+        self.model = load_model(local_path_or_model, **kwargs)
 
     def predict(
         self,

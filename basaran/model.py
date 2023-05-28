@@ -12,6 +12,7 @@ from transformers import (
     MinNewTokensLengthLogitsProcessor,
     TemperatureLogitsWarper,
     TopPLogitsWarper,
+    GenerationConfig,
 )
 
 from .choice import map_choice
@@ -180,8 +181,12 @@ class StreamModel:
         input_length = input_ids.shape[-1]
 
         # Separate model arguments from generation config.
-        config = self.model.generation_config
-        config = copy.deepcopy(config)
+        if hasattr(self.model, "generation_config"):
+            config = self.model.generation_config
+            config = copy.deepcopy(config)
+        else:
+            config = GenerationConfig.from_model_config(self.model.config)
+            config = copy.deepcopy(config)
         kwargs = config.update(**kwargs)
         kwargs["output_attentions"] = False
         kwargs["output_hidden_states"] = False
@@ -321,8 +326,15 @@ def load_model(
 
     if gptq:
         from auto_gptq import AutoGPTQForCausalLM
+
         assert torch.cuda.is_available()
-        model = AutoGPTQForCausalLM.from_quantized(name_or_path, device="cuda", use_triton=False, use_safetensors=True, torch_dtype=torch.float32, **kwargs)
+        model = AutoGPTQForCausalLM.from_quantized(
+            name_or_path,
+            device="cuda:0",
+            use_triton=False,
+            use_safetensors=True,
+            **kwargs,
+        )
         return StreamModel(model, tokenizer)
     # Set device mapping and quantization options if CUDA is available.
     if torch.cuda.is_available():
@@ -341,9 +353,9 @@ def load_model(
         model = AutoModelForCausalLM.from_pretrained(name_or_path, **kwargs)
     except ValueError:
         model = AutoModelForSeq2SeqLM.from_pretrained(name_or_path, **kwargs)
-    
+
     if torch.cuda.is_available() and not device_map_auto:
-        model.to('cuda')
+        model.to("cuda")
 
     # Check if the model has text generation capabilities.
     if not model.can_generate():
