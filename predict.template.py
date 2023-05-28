@@ -8,21 +8,24 @@ MODEL = "$MODEL"
 
 class Predictor(BasePredictor):
     def setup(self):
-        if 'falcon-40b' in MODEL:
+        if "falcon" in MODEL:
+            from monkey_patch.falcon import inject_monkey_patch_falcon
+
             kwargs = {
-                'device_map_auto': True,
-                'trust_remote_code': True,
-                'dtype': torch.bfloat16
+                "device_map_auto": True,
+                "trust_remote_code": True,
+                "dtype": torch.float32,
+                "inject_monkey_patch_fn": inject_monkey_patch_falcon(MODEL),
             }
-            if 'GPTQ' in MODEL:
-                kwargs.update({'gptq': True})
-                local_path_or_model = download(MODEL, 'models')
+            if "GPTQ" in MODEL:
+                kwargs.update({"gptq": True})
+                local_path_or_model = download(MODEL, "models")
             else:
                 local_path_or_model = MODEL
         else:
             kwargs = {}
             local_path_or_model = MODEL
-        print('load model: -> ', local_path_or_model)
+        print("load model: -> ", local_path_or_model)
         self.model = load_model(local_path_or_model, **kwargs)
 
     def predict(
@@ -50,4 +53,4 @@ class Predictor(BasePredictor):
         for choice in self.model(
             prompt=prompt, max_tokens=max_length, temperature=temperature, top_p=top_p
         ):
-            yield choice['text']
+            yield choice["text"]
