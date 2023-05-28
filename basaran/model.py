@@ -312,6 +312,7 @@ def load_model(
     trust_remote_code=False,
     dtype=torch.float16,
     gptq=False,
+    inject_monkey_patch_fn=None,
 ):
     """Load a text generation model and make it stream-able."""
     kwargs = {
@@ -335,6 +336,8 @@ def load_model(
             use_safetensors=True,
             **kwargs,
         )
+        if inject_monkey_patch_fn is not None:
+            inject_monkey_patch_fn()
         return StreamModel(model, tokenizer)
     # Set device mapping and quantization options if CUDA is available.
     if torch.cuda.is_available():
